@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:ignore="HardcodedText">
+
+    <item
+        android:id="@+id/navigation_geo_code"
+        android:icon="@drawable/ic_input_24dp"
+        android:title="GeoCoding"/>
+
+    <item
+        android:id="@+id/navigation_geo_code_results"
+        android:icon="@drawable/ic_list_24dp"
+        android:title="Results"/>
+
+</menu>

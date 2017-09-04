@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="?attr/selectableItemBackground"
+              android:clickable="true"
+              android:orientation="vertical"
+              android:paddingBottom="8dp"
+              android:paddingEnd="16dp"
+              android:paddingStart="16dp"
+              android:paddingTop="8dp">
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="middle"
+        android:lines="1"
+        android:textSize="16sp"
+        tools:text="132－4200 No.3 Rd., Richmond, BC V6X 2C2"/>
+
+    <TextView
+        android:id="@+id/tvTypes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textSize="16sp"
+        tools:text="street_address"/>
+
+</LinearLayout>
