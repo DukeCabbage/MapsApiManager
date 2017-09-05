@@ -6,6 +6,7 @@ import com.cabbage.mylibrary.authorization.ClientIdAuthInterceptor
 import com.cabbage.mylibrary.manager.AuthMethod
 import com.cabbage.mylibrary.manager.MapsApiManager
 import com.cabbage.mylibrary.manager.handleError
+import com.cabbage.mylibrary.manager.handleStatusCode
 import com.cabbage.mylibrary.place.model.AutoCompleteResponse
 import io.reactivex.Observable
 import okhttp3.Interceptor
@@ -88,7 +89,7 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
         val param = mutableMapOf(Pair("language", language))
 
         return autoCompleteInternal(input, "$latitude,$longitude", radius, param)
-                .handleError()
+                .handleError().handleStatusCode()
     }
 
     private fun autoCompleteInternal(input: String,

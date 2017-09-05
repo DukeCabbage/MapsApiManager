@@ -17,9 +17,7 @@ class AddressRecyclerViewAdapter(
             notifyDataSetChanged()
         }
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
@@ -37,9 +35,9 @@ class AddressRecyclerViewAdapter(
     }
 
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val tvAddress: TextView = view.findViewById<TextView>(R.id.tvAddress)
-        val tvTypes: TextView = view.findViewById<TextView>(R.id.tvTypes)
+        val tvAddress: TextView = view.findViewById(R.id.tvAddress)
+        val tvTypes: TextView = view.findViewById(R.id.tvTypes)
     }
 }

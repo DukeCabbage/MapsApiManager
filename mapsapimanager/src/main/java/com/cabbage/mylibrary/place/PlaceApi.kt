@@ -24,7 +24,7 @@ interface PlaceApi {
     //                             @QueryMap(encoded = false) optional: Map<String, String>?)
 
     companion object {
-        private const val PATH_SEARCH = "maps/api/place/nearbysearch/json"
+        private const val PATH_SEARCH = "maps/api/place/autocomplete/json"
 
         private const val PATH_DETAIL = "maps/api/place/details/json"
     }
