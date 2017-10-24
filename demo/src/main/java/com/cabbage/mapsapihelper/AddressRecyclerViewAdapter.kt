@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.cabbage.mylibrary.geocoding.model.AddressEntity
+import com.cabbage.mylibrary.geocoding.AddressEntity
 
 class AddressRecyclerViewAdapter(
         private val mListener: ResultListFragment.FragmentInteraction?)

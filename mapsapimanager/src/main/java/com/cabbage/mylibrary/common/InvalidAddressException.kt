@@ -1,4 +1,6 @@
-package com.cabbage.mylibrary.geocoding.model
+@file:Suppress("unused")
+
+package com.cabbage.mylibrary.common
 
 class InvalidAddressException : RuntimeException {
 

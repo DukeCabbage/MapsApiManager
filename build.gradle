@@ -2,7 +2,7 @@
 buildscript {
     // Define versions in a single place
     ext.minSdkVersion = 9
-    ext.demoMinSdkVersion = 21
+    ext.demoMinSdkVersion = 19
     ext.targetSdkVersion = 26
     ext.compileSdkVersion = 26
     ext.buildToolsVersion = '26.0.1'

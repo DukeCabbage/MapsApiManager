@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.cabbage.mylibrary.geocoding.model.AddressEntity
+import com.cabbage.mylibrary.geocoding.AddressEntity
 import kotlinx.android.synthetic.main.fragment_result_list.*
 import timber.log.Timber
 

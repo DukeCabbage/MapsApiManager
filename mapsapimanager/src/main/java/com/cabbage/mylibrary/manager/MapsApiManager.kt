@@ -2,49 +2,48 @@ package com.cabbage.mylibrary.manager
 
 import com.cabbage.mylibrary.geocoding.GeocodingService
 import com.cabbage.mylibrary.place.PlaceService
-import okhttp3.logging.HttpLoggingInterceptor.Level
 
 object MapsApiManager {
 
-    // TODO: This is not cool
-    var globalLogLevel: Level = Level.NONE
-        set(value) {
-            field = value
-            geocodingService.let { if (it.isNonDefault()) it.configure(logLevel = value) }
-            placeService.let { if (it.isNonDefault()) it.configure(logLevel = value) }
-        }
+    private var initialized: Boolean = false
 
-    var globalAuthMethod: AuthMethod = AuthMethod.None()
-        set(value) {
-            field = value
-            geocodingService.let { if (it.isNonDefault()) it.configure(authMethod = value) }
-            placeService.let { if (it.isNonDefault()) it.configure(authMethod = value) }
-        }
+    var language: String = "en"
+        private set
 
-    val geocodingService: GeocodingService by lazy { GeocodingService.create() }
+    fun configureLanguage(s: String?) {
+        language = s ?: "en"
+    }
 
-    val placeService: PlaceService by lazy { PlaceService.create() }
+    //    var globalLogLevel: LogLevel = LogLevel.None
+    //        set(value) {
+    //            field = value
+    //            geocodingService.let { if (it.isNonDefault()) it.configure(logLevel = value) }
+    //            placeService.let { if (it.isNonDefault()) it.configure(logLevel = value) }
+    //        }
+    //
+    //    var globalAuthMethod: AuthMethod = AuthMethod.None()
+    //        set(value) {
+    //            field = value
+    //            geocodingService.let { if (it.isNonDefault()) it.configure(authMethod = value) }
+    //            placeService.let { if (it.isNonDefault()) it.configure(authMethod = value) }
+    //        }
 
-//    fun geocodeByAddressName(name: String,
-//                             bounds: ReqBounds? = null,
-//                             language: String = "en",
-//                             region: String? = null,
-//                             components: Map<String, String>? = null)
-//            : Observable<GeocodingResponse>
-//            = geocodingService.queryByAddressName(name, bounds, language, region, components)
-//
-//    fun geocodeByLocation(latitude: Double,
-//                          longitude: Double,
-//                          language: String = "en",
-//                          resultType: List<String>? = null,
-//                          locationType: List<String>? = null)
-//            : Observable<GeocodingResponse>
-//            = geocodingService.queryByLocation(latitude, longitude, language, resultType, locationType)
-//
-//    fun geocodeByPlaceId(placeId: String,
-//                         language: String = "en",
-//                         resultType: List<String>? = null,
-//                         locationType: List<String>? = null)
-//            : Observable<GeocodingResponse>
-//            = geocodingService.queryByPlaceId(placeId, language, resultType, locationType)
+    internal lateinit var globalLogLevel: LogLevel
+
+    internal lateinit var globalAuthMethod: AuthMethod
+
+    lateinit var geocodingService: GeocodingService
+
+    lateinit var placeService: PlaceService
+
+    fun initialize(authMethod: AuthMethod = AuthMethod.None(),
+                   logLevel: LogLevel = LogLevel.None) {
+
+        globalLogLevel = logLevel
+        globalAuthMethod = authMethod
+
+        geocodingService = GeocodingService.create()
+        placeService = PlaceService.create()
+        initialized = true
+    }
 }

@@ -4,13 +4,13 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               tools:context="com.cabbage.mapsapihelper.FirstFragment">
-    
+
     <LinearLayout
         android:id="@+id/llLatLng"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        
+
         <EditText
             android:id="@+id/etLatitude"
             android:layout_width="0dp"
@@ -23,7 +23,7 @@
             android:inputType="numberDecimal|numberSigned"
             android:lines="1"
             android:minHeight="44dp"/>
-        
+
         <EditText
             android:id="@+id/etLongitude"
             android:layout_width="0dp"
@@ -35,35 +35,38 @@
             android:inputType="numberDecimal|numberSigned"
             android:lines="1"
             android:minHeight="44dp"/>
-    
+
     </LinearLayout>
-    
+
     <EditText
         android:id="@+id/etLanguage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="en"
-        android:hint="language"/>
-    
+        android:hint="language"
+        android:lines="1"
+        android:text="en"/>
+
     <EditText
         android:id="@+id/etResultType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="street_address"
-        android:hint="result type"/>
-    
+        android:hint="result type"
+        android:lines="1"
+        android:text="street_address"/>
+
     <EditText
         android:id="@+id/etLocationType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:hint="location type"/>
-    
+        android:hint="location type"
+        android:lines="1"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,13 +74,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="Authentication method:"/>
-    
+
     <Spinner
         android:id="@+id/spinnerAuthMethod"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"/>
-    
+
     <Button
         android:id="@+id/btnRequest"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"

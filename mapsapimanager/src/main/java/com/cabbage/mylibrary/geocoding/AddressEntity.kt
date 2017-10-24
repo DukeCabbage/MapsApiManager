@@ -1,6 +1,7 @@
-package com.cabbage.mylibrary.geocoding.model
+package com.cabbage.mylibrary.geocoding
 
-import java.io.Serializable
+import com.cabbage.mylibrary.common.Bounds
+import com.cabbage.mylibrary.common.Location
 
 class AddressEntity {
 

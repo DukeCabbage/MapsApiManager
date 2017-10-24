@@ -3,7 +3,7 @@ package com.cabbage.mylibrary.geocoding
 import android.util.Log
 import com.cabbage.mylibrary.authorization.ApiKeyAuthInterceptor
 import com.cabbage.mylibrary.authorization.ClientIdAuthInterceptor
-import com.cabbage.mylibrary.geocoding.model.GeocodingResponse
+
 import com.cabbage.mylibrary.manager.*
 import io.reactivex.Observable
 import okhttp3.Interceptor
@@ -18,10 +18,12 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Created by Leo on 2017-08-29.
  *
  */
-class GeocodingServiceImpl
-internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
-                     private var logLevel: Level = Level.NONE,
-                     internal var nonDefault: Boolean = false) : GeocodingService {
+internal class GeocodingServiceImpl
+internal constructor(
+        private var authMethod: AuthMethod = AuthMethod.None(),
+        private var logLevel: LogLevel = LogLevel.None,
+        internal var nonDefault: Boolean = false
+) : GeocodingService {
 
     private val TAG: String get() = GeocodingServiceImpl::class.java.simpleName
 
@@ -31,13 +33,13 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
         buildApi()
     }
 
-    override fun configure(authMethod: AuthMethod?, logLevel: Level?) {
+    override fun configure(authMethod: AuthMethod?, logLevel: LogLevel?) {
         this.authMethod = authMethod ?: this.authMethod
         this.logLevel = logLevel ?: this.logLevel
-        if (this.authMethod !== MapsApiManager.globalAuthMethod
-                || this.logLevel !== MapsApiManager.globalLogLevel) {
-            nonDefault = true
-        }
+        //        if (this.authMethod !== MapsApiManager.globalAuthMethod
+        //                || this.logLevel !== MapsApiManager.globalLogLevel) {
+        //            nonDefault = true
+        //        }
 
         buildApi()
     }
@@ -47,7 +49,7 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
         nonDefault = false
     }
 
-    override fun isNonDefault(): Boolean = nonDefault
+    //    override fun isNonDefault(): Boolean = nonDefault
 
     private fun buildApi() {
 
@@ -58,7 +60,15 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
                 else -> Interceptor { chain -> chain.proceed(chain.request()) }
             }
         }
-        val loggingInterceptor = HttpLoggingInterceptor().setLevel(logLevel)
+
+        val loggingInterceptor = HttpLoggingInterceptor().setLevel(
+                when (logLevel) {
+                    LogLevel.Body -> Level.BODY
+                    LogLevel.Basic -> Level.BASIC
+                    LogLevel.Header -> Level.HEADERS
+                    else -> Level.NONE
+                }
+        )
 
         val client = OkHttpClient.Builder()
                 .addInterceptor(authInterceptor)
@@ -75,16 +85,15 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
         geocodingApi = retrofit.create(GeocodingApi::class.java)
     }
 
-    override fun queryByAddressName(name: String,
-                                    bounds: ReqBounds?,
-                                    language: String?,
-                                    region: String?,
-                                    components: Map<String, String>?): Observable<GeocodingResponse> {
+    override fun queryByAddressName(
+            name: String,
+            bounds: ReqBounds?,
+            region: String?,
+            components: Map<String, String>?
+    ): Observable<GeocodingResponse> {
 
-        val param = mutableMapOf<String, String>()
-        if (language != null) {
-            param.put("language", language)
-        }
+        val param = mutableMapOf("language" to MapsApiManager.language)
+
         if (bounds != null) {
             val strBounds = "${bounds.southWest.lat},${bounds.southWest.lng}|${bounds.northEast.lat},${bounds.northEast.lng}"
             param.put("bounds", strBounds)
@@ -102,40 +111,37 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
         return getAddressFromNameInternal(name, param)
     }
 
-    override fun queryByLocation(latitude: Double,
-                                 longitude: Double,
-                                 language: String?,
-                                 resultType: String?,
-                                 locationType: String?): Observable<GeocodingResponse> {
+    override fun queryByLocation(
+            latitude: Double,
+            longitude: Double,
+            resultType: List<String>?,
+            locationType: List<String>?
+    ): Observable<GeocodingResponse> {
 
-        val param = mutableMapOf<String, String>()
-        if (language != null) {
-            param.put("language", language)
+        val param = mutableMapOf("language" to MapsApiManager.language)
+
+        if (resultType != null && resultType.isNotEmpty()) {
+            param.put("result_type", resultType.joinToString("|"))
         }
-        if (!resultType.isNullOrBlank()) param.put("result_type", resultType!!)
-        if (!locationType.isNullOrBlank()) param.put("location_type", locationType!!)
+
+        if (locationType != null && locationType.isNotEmpty()) {
+            param.put("location_type", locationType.joinToString("|"))
+        }
 
         return getAddressFromLocationInternal(latitude, longitude, param)
     }
 
-    override fun queryByPlaceId(placeId: String,
-                                language: String?,
-                                resultType: String?,
-                                locationType: String?): Observable<GeocodingResponse> {
+    override fun queryByPlaceId(placeId: String)
+            : Observable<GeocodingResponse> {
 
-        val param = mutableMapOf<String, String>()
-        if (language != null) {
-            param.put("language", language)
-        }
-        if (!resultType.isNullOrBlank()) param.put("result_type", resultType!!)
-        if (!locationType.isNullOrBlank()) param.put("location_type", locationType!!)
-
+        val param = mutableMapOf("language" to MapsApiManager.language)
         return getAddressFromPlaceIdInternal(placeId, param)
     }
 
-    private fun getAddressFromNameInternal(name: String,
-                                           optional: Map<String, String>? = null)
-            : Observable<GeocodingResponse> {
+    private fun getAddressFromNameInternal(
+            name: String,
+            optional: Map<String, String>? = null
+    ): Observable<GeocodingResponse> {
 
         if (geocodingApi == null) return Observable.error(IllegalStateException("Geo-coding api not instantiated yet"))
         if (name.isBlank()) return Observable.error(IllegalArgumentException("Address name can not be blank"))
@@ -147,10 +153,11 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
                 .handleError().handleStatusCode()
     }
 
-    private fun getAddressFromLocationInternal(latitude: Double,
-                                               longitude: Double,
-                                               optional: Map<String, String>? = null)
-            : Observable<GeocodingResponse> {
+    private fun getAddressFromLocationInternal(
+            latitude: Double,
+            longitude: Double,
+            optional: Map<String, String>? = null
+    ): Observable<GeocodingResponse> {
 
         if (geocodingApi == null) return Observable.error(IllegalStateException("Geo-coding api not instantiated yet"))
         if (latitude !in -90..90) return Observable.error(IllegalArgumentException("Invalid latitude $latitude"))
@@ -162,9 +169,10 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
 
     }
 
-    private fun getAddressFromPlaceIdInternal(placeId: String,
-                                              optional: Map<String, String>? = null)
-            : Observable<GeocodingResponse> {
+    private fun getAddressFromPlaceIdInternal(
+            placeId: String,
+            optional: Map<String, String>? = null
+    ): Observable<GeocodingResponse> {
 
         if (geocodingApi == null) return Observable.error(IllegalStateException("Geo-coding api not instantiated yet"))
         if (placeId.isBlank()) return Observable.error(IllegalArgumentException("Place id can not be blank"))
@@ -173,28 +181,4 @@ internal constructor(private var authMethod: AuthMethod = AuthMethod.None(),
         return geocodingApi!!.getAddressFromPlaceId(placeId, optional)
                 .handleError().handleStatusCode()
     }
-
-//    private fun Observable<GeocodingResponse>.handleError()
-//            : Observable<GeocodingResponse>
-//            = onErrorResumeNext { t: Throwable ->
-//        if (t is HttpException) {
-//            val res = Gson().safeFromJson(t.response().errorBody()?.string(), GeocodingResponse::class.java)
-//            if (res != null) return@onErrorResumeNext Observable.error(MapsApiError(res, t))
-//        } else if (t is UnknownHostException) {
-//            return@onErrorResumeNext Observable.error(MapsApiError("Unable to connect", t))
-//        }
-//        return@onErrorResumeNext Observable.error(t)
-//    }
-//
-//    /**
-//     * wraps around Gson.fromJson(String json, Class<T> classOfT), returns null if error happens
-//     */
-//    private fun <T> Gson.safeFromJson(json: String?, classOfT: Class<T>): T? {
-//        if (json.isNullOrBlank()) return null
-//        return try {
-//            fromJson(json, classOfT)
-//        } catch (e: JsonSyntaxException) {
-//            null
-//        }
-//    }
 }

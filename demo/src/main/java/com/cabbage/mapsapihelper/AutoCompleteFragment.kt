@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.cabbage.mylibrary.manager.MapsApiManager
-import com.cabbage.mylibrary.place.model.PredictionsItem
+import com.cabbage.mylibrary.place.PredictionsItem
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.fragment_auto_complete.*
 import timber.log.Timber

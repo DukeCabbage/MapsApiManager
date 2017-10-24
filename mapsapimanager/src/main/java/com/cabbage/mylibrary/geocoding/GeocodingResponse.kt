@@ -1,60 +1,33 @@
-package com.cabbage.mylibrary.geocoding.model
+package com.cabbage.mylibrary.geocoding
 
-import com.cabbage.mylibrary.GenericItem
-import com.cabbage.mylibrary.GenericRes
+import com.cabbage.mylibrary.common.*
 import com.google.gson.annotations.SerializedName
 import io.reactivex.functions.Function
 
 data class GeocodingResponse(
-        override val results: List<ResultsItem>? = null,
+        override val results: List<GeocodingItem>? = null,
         override val status: String? = null,
         @SerializedName("error_message")
         override val errorMessage: String? = null
-): GenericRes<ResultsItem>
+) : GenericRes<GeocodingItem>
 
-data class ResultsItem(
+data class GeocodingItem(
         @SerializedName("formatted_address")
         val formattedAddress: String? = null,
         val types: List<String>? = null,
         val geometry: Geometry? = null,
         @SerializedName("address_components")
-        val addressComponents: List<AddressComponentsItem>? = null,
+        val addressComponents: List<AddressComponent>? = null,
         @SerializedName("place_id")
         val placeId: String? = null
-): GenericItem
+) : GenericItem
 
-data class AddressComponentsItem(
-        val types: List<String>? = null,
-        @SerializedName("short_name")
-        val shortName: String? = null,
-        @SerializedName("long_name")
-        val longName: String? = null
-)
-
-data class Geometry(
-        val viewport: Bounds? = null,
-        val bounds: Bounds? = null,
-        val location: Location? = null,
-        @SerializedName("location_type")
-        val locationType: String? = null
-)
-
-data class Bounds(
-        val southwest: Location? = null,
-        val northeast: Location? = null
-)
-
-data class Location(
-        val lng: Double? = null,
-        val lat: Double? = null
-)
-
-abstract class GeoCodingParser<R> : Function<ResultsItem, R>
+abstract class GeoCodingParser<R> : Function<GeocodingItem, R>
 
 abstract class ResultToAddressParser : GeoCodingParser<AddressEntity>()
 
 class DefaultResultToAddressParser : ResultToAddressParser() {
-    override fun apply(result: ResultsItem): AddressEntity {
+    override fun apply(result: GeocodingItem): AddressEntity {
         if (result.addressComponents == null) throw InvalidAddressException("No address components")
 
         val address = AddressEntity()

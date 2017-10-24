@@ -2,8 +2,8 @@ package com.cabbage.mapsapihelper
 
 import android.app.Application
 import com.cabbage.mylibrary.manager.AuthMethod
+import com.cabbage.mylibrary.manager.LogLevel
 import com.cabbage.mylibrary.manager.MapsApiManager
-import okhttp3.logging.HttpLoggingInterceptor
 import timber.log.Timber
 
 class MyApplication : Application() {
@@ -17,8 +17,6 @@ class MyApplication : Application() {
         super.onCreate()
         if (BuildConfig.DEBUG) Timber.plant(mDebugTree)
 
-        MapsApiManager.globalLogLevel = HttpLoggingInterceptor.Level.BODY
-        MapsApiManager.placeService.configure(authMethod = AuthMethod.ApiKey("AIzaSyC-QCjP9MPW7j_Lu22NeIIlBDs5VJx5vxU"))
-
+        MapsApiManager.initialize(AuthMethod.ApiKey("AIzaSyC-QCjP9MPW7j_Lu22NeIIlBDs5VJx5vxU"), LogLevel.Body)
     }
 }

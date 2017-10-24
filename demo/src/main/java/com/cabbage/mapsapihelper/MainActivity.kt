@@ -9,8 +9,8 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.cabbage.mapsapihelper.detail.DetailActivity
-import com.cabbage.mylibrary.geocoding.model.AddressEntity
-import com.cabbage.mylibrary.geocoding.model.DefaultResultToAddressParser
+import com.cabbage.mylibrary.geocoding.AddressEntity
+import com.cabbage.mylibrary.geocoding.DefaultResultToAddressParser
 import com.cabbage.mylibrary.manager.MapsApiManager
 import com.cabbage.mylibrary.manager.ReqBounds
 import io.reactivex.Observable
@@ -76,11 +76,11 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun locationLookup(lat: Double, lng: Double,
-                                language: String?,
                                 resultType: String?,
                                 locationType: String?) {
         Observable.fromArray(1, 2, 3)
-        MapsApiManager.geocodingService.queryByLocation(lat, lng, language, resultType, locationType)
+
+        MapsApiManager.geocodingService.queryByLocation(lat, lng, resultType?.split("|")?.toList(), locationType?.split("|")?.toList())
                 .flatMap { it.results!!.toObservable() }
                 .map { DefaultResultToAddressParser().apply(it) }
                 .compose { applyIoSchedulers(it) }
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(),
                 )
     }
 
-    override fun addressLookup(address: String, language: String?, bounds: ReqBounds?) {
+    override fun addressLookup(address: String, bounds: ReqBounds?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
     //endregion

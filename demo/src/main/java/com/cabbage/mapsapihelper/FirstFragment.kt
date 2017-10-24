@@ -3,6 +3,8 @@ package com.cabbage.mapsapihelper
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +42,7 @@ class FirstFragment : Fragment() {
         preference.getString("CACHE_LAT", "49.190658").let { etLatitude.setText(it) }
         preference.getString("CACHE_LNG", "-123.149168").let { etLongitude.setText(it) }
 
+        // Button to trigger request
         btnRequest.setOnClickListener {
             val lat = etLatitude.text.toString().toDoubleOrNull()
             val lng = etLongitude.text.toString().toDoubleOrNull()
@@ -50,15 +53,27 @@ class FirstFragment : Fragment() {
                         .putString("CACHE_LNG", lng.toString())
                         .apply()
 
-                mInteraction?.locationLookup(lat, lng,
-                        if (etLanguage.text.toString().isBlank()) null else etLanguage.text.toString(),
+                mInteraction?.locationLookup(
+                        lat, lng,
                         if (etResultType.text.toString().isBlank()) null else etResultType.text.toString(),
                         if (etLocationType.text.toString().isBlank()) null else etLocationType.text.toString())
             }
         }
 
+        // Language
+        etLanguage.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                MapsApiManager.configureLanguage(s?.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        // Authentication method spinner
         val adapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(context, R.array.spinner_content,
-                android.R.layout.simple_spinner_item)
+                                                                                  android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerAuthMethod.adapter = adapter
         spinnerAuthMethod.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -87,12 +102,10 @@ class FirstFragment : Fragment() {
         fun fragAttached(frag: FirstFragment)
 
         fun locationLookup(lat: Double, lng: Double,
-                           language: String?,
                            resultType: String?,
                            locationType: String?)
 
         fun addressLookup(address: String,
-                          language: String?,
                           bounds: ReqBounds?)
     }
 }

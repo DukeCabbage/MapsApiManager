@@ -31,8 +31,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    debugCompile project(path: ':mapsapimanager', configuration: 'debug')
-    releaseCompile project(path: ':mapsapimanager', configuration: 'release')
+    compile project(path: ':mapsapimanager')
+//    debugCompile project(path: ':mapsapimanager', configuration: 'debug')
+//    releaseCompile project(path: ':mapsapimanager', configuration: 'release')
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 

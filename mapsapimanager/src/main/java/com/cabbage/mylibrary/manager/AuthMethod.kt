@@ -27,4 +27,3 @@ sealed class AuthMethod {
         override fun toString(): String = "ClientId(clientId='$clientId', cryptoKey='$cryptoKey', channel=$channel)"
     }
 }
-

@@ -1,7 +1,7 @@
 package com.cabbage.mylibrary.manager
 
-import com.cabbage.mylibrary.GenericRes
-import com.cabbage.mylibrary.geocoding.model.GeocodingResponse
+import com.cabbage.mylibrary.common.GenericRes
+import com.cabbage.mylibrary.geocoding.GeocodingResponse
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import io.reactivex.Observable
